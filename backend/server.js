@@ -2,20 +2,24 @@ import express from "express";
 import dotenv from "dotenv";
 import colors from "colours";
 import connectDB from "./config/db.js";
-
+import { notFound, errorHandler } from "./middlerware/errorMiddleware.js";
 
 import productRoutes from "./routes/productRoutes.js";
 dotenv.config();
-const app = express();
 
 connectDB();
+
+const app = express();
 
 app.get("/", (req, res) => {
   res.send("api is running .....");
 });
 
+app.use("/api/products", productRoutes);
 
-app.use('/api/products', productRoutes)
+app.use(notFound);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
